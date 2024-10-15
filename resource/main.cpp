@@ -63,7 +63,6 @@ void bond_perlocation(grafo& grafo, double p) {
 
 int main() {
     ofstream file("estadisticas.csv");
-    file << "n vertices, p, p de transición" << endl;
 
     double p = 0.3;
     string directorio = "D:\\UNI 4rt\\A\\Algorismia\\docs";
@@ -71,6 +70,8 @@ int main() {
     double percolados = 0;
     double descartados = 0; //si generamos un grafo y este desde el principio no es connexo no podemos ver el cambio de fase
     while(p <= 1){
+        percolados = 0;
+        descartados = 0;
         for(const auto& entry : filesystem::directory_iterator(directorio)){
             if(entry.is_regular_file() && entry.path().extension() == ".csv"){
                 string filePath = entry.path().string();
