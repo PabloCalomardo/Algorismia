@@ -4,6 +4,7 @@
 #include <random>
 #include <iomanip>
 #include <filesystem>
+#include <algorithm>
 #include "Graf_impl.h"
 using namespace std;
 
@@ -19,6 +20,35 @@ grafo genera_random(int n, float p) {
         }
     }
     return G;
+}
+
+bool check_infinite_cluster(grafo& grafo) {
+    // Obtenim el nombre de components connexes
+    list<pair<int, list<int>>> aux1 = grafo.get_vertices();
+
+    if (aux1.size() == 0) return false; // Si el graf és buit, no hi ha clúster infinit
+
+    int n = aux1.size(); // Nombre total de vèrtexs
+
+    // Mida màxima de qualsevol component
+    int max_component_size = 0;
+
+    // Llista per guardar les components ja explorades
+    list<list<int>> components = grafo.get_all_components();
+
+    for (const auto& component : components) {
+        int component_size = component.size();
+        if (component_size > max_component_size) {
+            max_component_size = component_size;
+        }
+    }
+
+    // Considerem un clúster infinit si la mida màxima de la component és almenys el 50% dels vèrtexs totals
+    if (max_component_size >= n * 0.5) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -63,8 +93,10 @@ void bond_perlocation(grafo& grafo, double p) {
 
 int main() {
     ofstream file("estadisticas.csv");
+    cout << "insereix la probabilitat inicial" << endl;
+    double p ;
+    cin >> p;
 
-    double p = 0.3;
     string directorio = "D:\\UNI 4rt\\A\\Algorismia\\docs";
 
     double percolados = 0;
@@ -73,29 +105,33 @@ int main() {
         percolados = 0;
         descartados = 0;
         for(const auto& entry : filesystem::directory_iterator(directorio)){
-            if(entry.is_regular_file() && entry.path().extension() == ".csv"){
+            if(entry.is_regular_file() && entry.path().extension() == ".csv" && entry.path().string().rfind("perc.csv") != (entry.path().string().size() - 8)){
                 string filePath = entry.path().string();
                 ifstream fgraf(filePath);
+
+                string outfilePath = filePath;
+                outfilePath.erase(outfilePath.length() - 4, 4);
+                ofstream outgraf(outfilePath+to_string(p)+"perc"+".csv");
 
                 grafo generat;
                 generat.read(fgraf); //Inicialitzem el graf
 
-                if (generat.size() > 0) { //descartamos un grafo en dos casos, si inicialmente no es connexo o si es un grafo vacio.
-                int v = generat.get_element();
-                int componentes = generat.CC(v);
-
-                if (componentes > 1) ++descartados;
-                else {
                     bond_perlocation(generat, p);
-                    componentes = generat.CC(v);
-                    if (componentes > 1) ++percolados;
-                }
-                } else ++descartados;
-            }
+                    //generat.write(outgraf);
+                    bool infinite_cluster = check_infinite_cluster(generat);
+                    if (infinite_cluster){
+                        cout << "Graf Infinit amb nom: " << filePath << endl;
+                        ++percolados;
+                    }
+                    else ++descartados;
+
+            } 
         }
-        double p_trans = double(percolados/(10.0-descartados));
+        
+        double p_trans = double(percolados/max(descartados,1.0));
+        cout <<  p << "," << percolados << descartados << endl;
         file << std::fixed << std::setprecision(3);
         file << p << "," << p_trans << endl;
-        p += 0.01;
+        p += 0.1;
     }
 }

@@ -32,6 +32,7 @@ class grafo
         int get_element() const;
 
         list<pair<int, list<int>>> get_vertices() const;
+        list<list<int>> get_all_components();
 
         void print() const;
         void read(ifstream& file);

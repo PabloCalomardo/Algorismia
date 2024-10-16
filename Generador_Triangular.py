@@ -36,11 +36,11 @@ def guardar_graella_en_fitxer(G, fitxer):
             f.write(f"{node_index[node]}," + ",".join(str(node_index[v]) for v in veins) + "\n")
 
 # Exemple d'ús
-n = 50  # Numero de grafs creats
+n = 5  # Numero de grafs creats
 nom_resultat_csv = './docs/graf_triangular'  # Nom del fitxer de sortida per al CSV
 
 for i in range(n):
     nom_csv = nom_resultat_csv+str(i)
-    num_nodes = random.randint(2, 15) #numero de nodes
+    num_nodes = random.randint(3, 10) #Alçada
     G = generar_graella_triangular(num_nodes)
     guardar_graella_en_fitxer(G,nom_csv+'.csv')

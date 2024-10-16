@@ -107,6 +107,50 @@ bool grafo::exist_conection(int v1, int v2) const {
     return false;
 }
 
+list<list<int>> grafo::get_all_components() {
+    // Llista per guardar totes les components
+    list<list<int>> components;
+
+    // Vector de visitats per saber si ja hem processat un vèrtex
+    vector<bool> visitados(size(), false); 
+
+    // Recorrem tots els vèrtexs
+    for (const auto& vertex : vertices) {
+        int v = vertex.first;
+
+        // Si aquest vèrtex no ha estat visitat, és una nova component
+        if (!visitados[v]) {
+            list<int> component;
+            stack<int> s;
+            s.push(v);
+
+            // Fem DFS iteratiu per trobar tota la component connectada
+            while (!s.empty()) {
+                int current = s.top();
+                s.pop();
+
+                if (!visitados[current]) {
+                    visitados[current] = true;
+                    component.push_back(current);
+
+                    // Afegim els veïns a la pila per explorar-los
+                    for (int neighbor : vertex.second) {
+                        if (!visitados[neighbor]) {
+                            s.push(neighbor);
+                        }
+                    }
+                }
+            }
+
+            // Afegim la component trobada a la llista de components
+            components.push_back(component);
+        }
+    }
+
+    return components;
+}
+
+
 void grafo::remove_aresta(int v1, int v2) {
     auto it = vertices.begin();
     
