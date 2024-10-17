@@ -53,20 +53,20 @@ void grafo::DFS(int v, vector<bool>& visitados) {
     for (auto vertex : vertices) {
         if (vertex.first == v) {
             for (auto adj : vertex.second) {
-                if (not visitados[adj]) DFS(adj, visitados);
+                if (!visitados[adj]) DFS(adj, visitados);
             }
         }
     }
 }
 
-int grafo::CC(int v) {
+int grafo::CC() {
     int V = vertices.size();
     vector<bool> vis(V, false);
 
     int componentes = 0;
     for (auto it : vertices) {
         int v = it.first;
-        if (not vis[v]) {
+        if (!vis[v]) {
             DFS(v, vis);
             ++componentes;
         }

@@ -92,46 +92,48 @@ void bond_perlocation(grafo& grafo, double p) {
 }
 
 int main() {
-    ofstream file("estadisticas.csv");
-    cout << "insereix la probabilitat inicial" << endl;
-    double p ;
-    cin >> p;
-
     string directorio = "D:\\UNI 4rt\\A\\Algorismia\\docs";
 
-    double percolados = 0;
-    double descartados = 0; //si generamos un grafo y este desde el principio no es connexo no podemos ver el cambio de fase
-    while(p <= 1){
-        percolados = 0;
-        descartados = 0;
-        for(const auto& entry : filesystem::directory_iterator(directorio)){
-            if(entry.is_regular_file() && entry.path().extension() == ".csv" && entry.path().string().rfind("perc.csv") != (entry.path().string().size() - 8)){
-                string filePath = entry.path().string();
-                ifstream fgraf(filePath);
+    int num_experiments;
+    cout << "introdueix el numero d'experiments que vols fer" << endl;
+    cin >> num_experiments;
 
-                string outfilePath = filePath;
-                outfilePath.erase(outfilePath.length() - 4, 4);
-                ofstream outgraf(outfilePath+to_string(p)+"perc"+".csv");
+    for(int i = 0; i < num_experiments; ++i){
+        double p = 0;
+        double percolados = 0;
+        double descartados = 0; //si generamos un grafo y este desde el principio no es connexo no podemos ver el cambio de fase
+        ofstream file("estadisticas"+to_string(i)+".csv");
+        while(p <= 1){
+            percolados = 0;
+            descartados = 0;
+            for(const auto& entry : filesystem::directory_iterator(directorio)){
+                if(entry.is_regular_file() && entry.path().extension() == ".csv" && entry.path().string().rfind("perc.csv") != (entry.path().string().size() - 8)){
+                    string filePath = entry.path().string();
+                    ifstream fgraf(filePath);
 
-                grafo generat;
-                generat.read(fgraf); //Inicialitzem el graf
+                    //string outfilePath = filePath;
+                    //outfilePath.erase(outfilePath.length() - 4, 4);
+                    //ofstream outgraf(outfilePath+to_string(p)+"perc"+".csv");
 
-                    bond_perlocation(generat, p);
-                    //generat.write(outgraf);
-                    bool infinite_cluster = check_infinite_cluster(generat);
-                    if (infinite_cluster){
-                        cout << "Graf Infinit amb nom: " << filePath << endl;
-                        ++percolados;
-                    }
-                    else ++descartados;
+                    grafo generat;
+                    generat.read(fgraf); //Inicialitzem el graf
 
-            } 
+                        bond_perlocation(generat, p);
+                        //generat.write(outgraf);
+                        if (generat.CC() == 1){
+                            cout << "Graf amb 1 component conexa: " << filePath << endl;
+                            ++percolados;
+                        }
+                        else ++descartados;
+
+                } 
+            }
+            
+            double p_trans = double(percolados/max(descartados,1.0));
+            cout <<  p << "," << percolados << descartados << endl;
+            file << std::fixed << std::setprecision(3);
+            file << p << "," << p_trans << endl;
+            p += 0.005;
         }
-        
-        double p_trans = double(percolados/max(descartados,1.0));
-        cout <<  p << "," << percolados << descartados << endl;
-        file << std::fixed << std::setprecision(3);
-        file << p << "," << p_trans << endl;
-        p += 0.1;
     }
 }
