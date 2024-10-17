@@ -1,3 +1,5 @@
+# SCRIPT PER VISUALITZAR UN GRAF DES DE TOTS ELS CSV D'UNA CARPETA
+
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -5,7 +7,7 @@ import numpy as np
 import glob
 import os
 
-# SCRIPT PER VISUALITZAR UN GRAF DES DE TOTS ELS CSV D'UNA CARPETA
+
 
 nom_carpeta = './docs/*.csv'  # Canvia això pel camí de la carpeta amb els CSVs
 

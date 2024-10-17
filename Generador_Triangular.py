@@ -35,8 +35,8 @@ def guardar_graella_en_fitxer(G, fitxer):
             # Escrivim la línia al fitxer
             f.write(f"{node_index[node]}," + ",".join(str(node_index[v]) for v in veins) + "\n")
 
-# Exemple d'ús
-n = 200  # Numero de grafs creats
+
+n = int(input("Introdueix el nombre de grafs a generar\n")) # Numero de grafs creats
 nom_resultat_csv = './docs/graf_triangular'  # Nom del fitxer de sortida per al CSV
 
 for i in range(n):
