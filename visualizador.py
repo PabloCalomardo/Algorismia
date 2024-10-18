@@ -9,7 +9,7 @@ import os
 
 
 
-nom_carpeta = './docs/*.csv'  # Canvia això pel camí de la carpeta amb els CSVs
+nom_carpeta = './docs/graf_triangular1.csv'  # Canvia això pel camí de la carpeta amb els CSVs
 
 # Funció per disposar els nodes en una quadrícula
 def quadrat_layout(graf):

@@ -2,6 +2,12 @@ Algorismia:
 Experiment de la probabilitat de Transició d'un graf geomètric de graella triangular
 
 Funcionament:
+Hi ha dues maneres d'executar l'experiment, la manual (feta per a experimentar més concretament i poder debbugar quins errors o quins exemples s'estan utilitzant) i la automàtica que és amb la que fem els experiments més ràpidament.
+
+AUTOMÀTICA:
+1. Situa la consola al directori principal, executa la següent comanda i segueix les instruccions: $python3 EXPERIMENT.py
+
+MANUAL:
 1.  Desde el directori principal, Genera els Grafs Triangulars amb l'script Generador_Triangular.py 
 2. Dins del directori /resource/, executa el programa main.exe, Això pot trigar una estona, ja que estarà executant l'experiment
 3. Dins del directori /resource/, executa l'script Compactador_estadistiques.py que compactarà fent la mitjana de tots els documents estadisticas#.csv al document estadisticageneral.csv
