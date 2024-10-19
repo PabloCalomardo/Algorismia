@@ -94,6 +94,12 @@ void bond_perlocation(grafo& grafo, double p) {
 int main() {
     string directorio = "D:\\UNI 4rt\\A\\Algorismia\\docs";
 
+    int percolacio = -1;
+    while(percolacio < 0 || percolacio > 1){
+        cout << "Introdueix 0 si vols realitzar la percolació de nodes o 1 per realitzar percolació d'arestes" << endl;
+        cin >> percolacio;
+    }
+
     int num_experiments;
     cout << "introdueix el numero d'experiments que vols fer" << endl;
     cin >> num_experiments;
@@ -117,8 +123,12 @@ int main() {
 
                     grafo generat;
                     generat.read(fgraf); //Inicialitzem el graf
-
-                        bond_perlocation(generat, p);
+                        if(percolacio == 1){
+                            bond_perlocation(generat, p);
+                        }
+                        else{
+                            site_perlocation(generat, p);
+                        }
                         //generat.write(outgraf);
                         if (generat.CC() == 1){
                             cout << "Graf amb 1 component conexa: " << filePath << endl;
